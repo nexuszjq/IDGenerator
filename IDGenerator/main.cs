@@ -41,27 +41,38 @@ namespace IDGenerator
                 return;
             }
 
+            string res = string.Empty;
+            long id = long.Parse(this.ID.Text);
+
+            for (int i = 0; i < count; i++)
+            {
+                res += createAcctId(Convert.ToString(id)) + "\n";
+                id++;
+            }
+
+            FileStream fs = null;
+            StreamWriter sw = null;
             try
             {
-                string res = string.Empty;
-                long id = long.Parse(this.ID.Text);
-                
-                for (int i = 0; i < count; i++)
-                {
-                    res += createAcctId(Convert.ToString(id)) + "\n";
-                    id++;
-                }
-
-                FileStream fs = new FileStream(this.path.Text + "\\" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt", FileMode.Append);
-                StreamWriter sw = new StreamWriter(fs, Encoding.Default);
+                fs = new FileStream(this.path.Text + "\\" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt", FileMode.Append);
+                sw = new StreamWriter(fs, Encoding.UTF8);
                 sw.Write(res);
-                sw.Close();
-                fs.Close();
                 MessageBox.Show("创建成功");
             }
             catch (Exception ex)
             {
                 MessageBox.Show("创建失败：" + ex.Message);
+            }
+            finally
+            {
+                if (sw != null)
+                {
+                    sw.Close();
+                }
+                if (fs != null)
+                {
+                    fs.Close();
+                }
             }
         }
 
@@ -81,6 +92,11 @@ namespace IDGenerator
             }
         }
 
+        /// <summary>
+        /// Luhn补全卡号
+        /// </summary>
+        /// <param name="acctId"></param>
+        /// <returns></returns>
         public static string createAcctId(string acctId)
         {
             if (string.IsNullOrEmpty(acctId) || !Regex.IsMatch(acctId, acctCreatePattern))
