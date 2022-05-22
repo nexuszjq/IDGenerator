@@ -22,9 +22,9 @@ namespace IDGenerator
 
         private void create_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(this.ID.Text))
+            if (string.IsNullOrEmpty(this.ID.Text) || this.ID.Text.Length != 18)
             {
-                MessageBox.Show("请输入卡号");
+                MessageBox.Show("请输入卡号前18位");
                 return;
             }
 
@@ -34,16 +34,21 @@ namespace IDGenerator
                 return;
             }
 
+            int endSix = int.Parse(this.ID.Text.Substring(12));
             int count = int.Parse(this.count.Text);
-            if (count >= 999)
+            if (count >= 10000)
             {
-                MessageBox.Show("每次只能创建小于999个卡号");
+                MessageBox.Show("每次仅能生成小于10000次");
+                return;
+            }
+            if (endSix + count > 999999)
+            {
+                MessageBox.Show("尾号递增溢出，请检查卡号和生成次数");
                 return;
             }
 
-            string res = string.Empty;
             long id = long.Parse(this.ID.Text);
-
+            string res = string.Empty;
             for (int i = 0; i < count; i++)
             {
                 res += createAcctId(Convert.ToString(id)) + "\r\n";
