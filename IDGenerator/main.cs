@@ -46,7 +46,7 @@ namespace IDGenerator
 
             for (int i = 0; i < count; i++)
             {
-                res += createAcctId(Convert.ToString(id)) + "\n";
+                res += createAcctId(Convert.ToString(id)) + "\r\n";
                 id++;
             }
 
